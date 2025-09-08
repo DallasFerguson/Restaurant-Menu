@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bistro Imaginaire | Menu & Order</title>
+    <title>Around the World in 80 Ales | Global Beer Explorer</title>
     <style>
         /* CSS Reset and Variables */
         :root {
-            --primary: #2d3142;
-            --secondary: #ef8354;
-            --light: #f5f5f5;
-            --gray: #bfc0c0;
-            --dark: #4f5d75;
+            --primary: #3a2a0d;
+            --secondary: #c2742c;
+            --accent: #f2b44d;
+            --light: #f5f1e9;
+            --dark: #604a24;
+            --cream: #fcf8f2;
+            --gray: #d9d0c1;
         }
         
         * {
@@ -32,27 +34,20 @@
             background-color: var(--primary);
             color: white;
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 0;
             position: relative;
             overflow: hidden;
-        }
-        
-        .pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            background-image: radial-gradient(var(--secondary) 2px, transparent 2px);
-            background-size: 30px 30px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c2742c' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E"),
+                          linear-gradient(to right, var(--primary), #4a350f);
         }
         
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 0.5rem;
             position: relative;
             z-index: 1;
+            font-family: 'Georgia', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .tagline {
@@ -60,21 +55,35 @@
             font-weight: 300;
             position: relative;
             z-index: 1;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
         /* Layout */
         main {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 350px;
             gap: 2rem;
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             main {
                 grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
             }
         }
         
@@ -82,19 +91,29 @@
         .menu-container {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             overflow: hidden;
         }
         
         .menu-header {
             background-color: var(--secondary);
             color: white;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: center;
+            font-family: 'Georgia', serif;
         }
         
         .menu-items {
-            padding: 1.5rem;
+            padding: 0.5rem 1.5rem 1.5rem;
+        }
+        
+        .region-header {
+            color: var(--secondary);
+            padding: 1.5rem 0 0.5rem;
+            margin-top: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+            font-family: 'Georgia', serif;
+            font-size: 1.5rem;
         }
         
         .menu-item {
@@ -103,6 +122,11 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
         }
         
         .menu-item:last-child {
@@ -110,49 +134,90 @@
         }
         
         .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background-color: var(--cream);
+        }
+        
+        .beer-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .beer-actions {
+            display: flex;
+            align-items: center;
         }
         
         .menu-item h3 {
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 1.3rem;
+        }
+        
+        .beer-origin {
+            color: var(--dark);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         
         .price {
             color: var(--secondary);
             font-weight: bold;
+            white-space: nowrap;
+            margin-left: 1rem;
         }
         
         .description {
             color: #666;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
         .add-btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 500;
         }
         
         .add-btn:hover {
             background-color: var(--secondary);
+            transform: scale(1.05);
         }
         
         /* Order Styles */
         .order-container {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             overflow: hidden;
             position: sticky;
             top: 2rem;
@@ -162,8 +227,9 @@
         .order-header {
             background-color: var(--dark);
             color: white;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: center;
+            font-family: 'Georgia', serif;
         }
         
         .order-items {
@@ -175,8 +241,19 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px dashed var(--gray);
+        }
+        
+        .order-item-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .order-item-origin {
+            font-size: 0.85rem;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
         }
         
         .item-controls {
@@ -188,8 +265,8 @@
         .quantity-btn {
             background-color: var(--light);
             border: 1px solid var(--gray);
-            width: 25px;
-            height: 25px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: grid;
             place-items: center;
@@ -204,12 +281,14 @@
         
         .quantity {
             margin: 0 0.5rem;
+            font-weight: 600;
         }
         
         .empty-order {
             text-align: center;
             color: #999;
             padding: 2rem 0;
+            font-style: italic;
         }
         
         .order-total {
@@ -277,7 +356,7 @@
         }
         
         .in-order {
-            background-color: rgba(239, 131, 84, 0.05);
+            background-color: rgba(242, 180, 77, 0.1);
         }
         
         .success-message {
@@ -292,6 +371,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             z-index: 1000;
             transition: all 0.5s ease;
+            text-align: center;
         }
         
         .show-message {
@@ -301,15 +381,15 @@
 </head>
 <body>
     <header>
-        <div class="pattern"></div>
-        <h1>Bistro Imaginaire</h1>
-        <p class="tagline">Where flavors meet imagination</p>
+        <h1>Around the World in 80 Ales</h1>
+        <p class="tagline">A global journey through craft beer</p>
+        <p class="subtitle">Discover legendary brews from six continents - taste traditions, stories, and craftsmanship in every sip.</p>
     </header>
     
     <main>
         <div class="menu-container">
             <div class="menu-header">
-                <h2>Our Menu</h2>
+                <h2>Global Beer Selection</h2>
             </div>
             <div class="menu-items" id="menuItems">
                 <!-- Menu items will be populated by JavaScript -->
@@ -318,11 +398,11 @@
         
         <div class="order-container">
             <div class="order-header">
-                <h2>Your Order</h2>
+                <h2>Your Beer Flight</h2>
             </div>
             <div class="order-items" id="orderItems">
                 <div class="empty-order" id="emptyOrder">
-                    Your order is empty
+                    Your beer flight is empty
                 </div>
                 <!-- Order items will be populated by JavaScript -->
             </div>
@@ -330,15 +410,16 @@
                 <span>Total:</span>
                 <span id="totalAmount">$0.00</span>
             </div>
-            <button class="checkout-btn" id="checkoutBtn" disabled>Checkout</button>
+            <button class="checkout-btn" id="checkoutBtn" disabled>Place Order</button>
         </div>
     </main>
     
+    <!-- Success Message -->
     <div class="success-message" id="successMessage">
         Order placed successfully!
     </div>
     
     <!-- Link to the JavaScript file -->
-    <script src="restaurant.js"></script>
+    <script src="../src/restaurant.js"></script>
 </body>
 </html>
