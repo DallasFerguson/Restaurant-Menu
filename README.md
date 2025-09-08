@@ -1,2 +1,2 @@
 # Restaurant-Menu
-Restaurant Menu that includes a ton of food and beverages 
+Around the World in 80 Ales menu that lets people choose alchoholic beverages from a variety of countries and continents
