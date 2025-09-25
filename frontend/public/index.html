@@ -85,6 +85,10 @@
             h1 {
                 font-size: 2.2rem;
             }
+            
+            .menu-tabs {
+                overflow-x: auto;
+            }
         }
         
         /* Menu Styles */
@@ -93,6 +97,8 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
         .menu-header {
@@ -103,8 +109,57 @@
             font-family: 'Georgia', serif;
         }
         
+        /* Tab Styles */
+        .menu-tabs {
+            display: flex;
+            background-color: var(--cream);
+            border-bottom: 2px solid var(--secondary);
+            position: relative;
+        }
+        
+        .menu-tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            max-width: 180px;
+            font-family: 'Georgia', serif;
+            text-align: center;
+        }
+        
+        .menu-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-tab:hover {
+            background-color: rgba(242, 180, 77, 0.1);
+        }
+        
+        .menu-tab.active {
+            color: var(--secondary);
+        }
+        
+        .menu-tab.active::after {
+            transform: scaleX(1);
+        }
+        
         .menu-items {
             padding: 0.5rem 1.5rem 1.5rem;
+            flex: 1;
         }
         
         .region-header {
@@ -391,7 +446,8 @@
             <div class="menu-header">
                 <h2>Global Beer Selection</h2>
             </div>
-            <div class="menu-items" id="menuItems">
+            <!-- Tab navigation will be inserted here by JS -->
+            <div class="menu-items" id="menuItems" role="tabpanel">
                 <!-- Menu items will be populated by JavaScript -->
             </div>
         </div>
