@@ -190,6 +190,7 @@ let orderItems = [];
 // 2. DOM ELEMENTS
 // These will be initialized once the DOM is loaded
 let menuItemsContainer;
+let menuTabsContainer;
 let orderItemsContainer;
 let emptyOrderElement;
 let orderTotalElement;
@@ -208,11 +209,19 @@ function initializeApp() {
   checkoutBtn = document.getElementById('checkoutBtn');
   successMessage = document.getElementById('successMessage');
   
+  // Create tabs container
+  menuTabsContainer = document.createElement('div');
+  menuTabsContainer.className = 'menu-tabs';
+  
+  // Insert tabs container before the menu items
+  const menuContainer = document.querySelector('.menu-container');
+  menuContainer.insertBefore(menuTabsContainer, menuItemsContainer);
+  
   // Load any saved order from localStorage
   loadOrderFromStorage();
   
   // Render the menu and order
-  renderMenu();
+  createTabs();
   renderOrder();
   
   // Add event listener to checkout button
@@ -235,65 +244,120 @@ function groupMenuByRegion() {
   return groupedMenu;
 }
 
-// 5. RENDER FUNCTIONS
-// Render the menu items
-function renderMenu() {
-  menuItemsContainer.innerHTML = '';
-  
+// 5. CREATE TABS FOR REGIONS
+function createTabs() {
   // Group beers by region
   const groupedMenu = groupMenuByRegion();
   
-  // Create region sections
-  Object.entries(groupedMenu).forEach(([region, beers]) => {
-    // Create region header
-    const regionHeader = document.createElement('h2');
-    regionHeader.className = 'region-header';
-    regionHeader.textContent = region;
-    menuItemsContainer.appendChild(regionHeader);
+  // Clear tabs container
+  menuTabsContainer.innerHTML = '';
+  
+  // Get regions
+  const regions = Object.keys(groupedMenu);
+  
+  // Create tab for each region
+  regions.forEach((region, index) => {
+    const tab = document.createElement('button');
+    tab.className = 'menu-tab';
+    tab.textContent = region;
+    tab.dataset.region = region;
+    tab.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', `region-${region.toLowerCase()}`);
     
-    // Render beers for this region
-    beers.forEach(beer => {
-      // Check if this item is in the order
-      const inOrder = orderItems.find(orderItem => orderItem.id === beer.id);
-      const quantity = inOrder ? inOrder.quantity : 0;
+    // Make first tab active
+    if (index === 0) {
+      tab.classList.add('active');
+    }
+    
+    // Add click event to tab
+    tab.addEventListener('click', () => {
+      // Deactivate all tabs
+      document.querySelectorAll('.menu-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
       
-      // Create the menu item element
-      const menuItemElement = document.createElement('div');
-      menuItemElement.className = `menu-item ${quantity > 0 ? 'in-order' : ''}`;
-      menuItemElement.dataset.id = beer.id;
+      // Activate this tab
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       
-      // Populate with HTML
-      menuItemElement.innerHTML = `
-        <div class="beer-info">
-          <h3>
-            ${beer.name}
-            <span class="price">$${beer.price.toFixed(2)}</span>
-          </h3>
-          <div class="beer-origin">${beer.country} • ${beer.abv} ABV</div>
-          <p class="description">${beer.description}</p>
-          <div class="tags">
-            ${beer.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-          </div>
-        </div>
-        <div class="beer-actions">
-          <button class="add-btn" aria-label="Add ${beer.name} to order">
-            <span>Add to Flight</span>
-          </button>
-        </div>
-        <div class="quantity-badge" aria-label="${quantity} in order">${quantity}</div>
-      `;
-      
-      // Add the element to the container
-      menuItemsContainer.appendChild(menuItemElement);
-      
-      // Add event listener to the add button
-      const addButton = menuItemElement.querySelector('.add-btn');
-      addButton.addEventListener('click', () => addToOrder(beer));
+      // Show this region
+      renderMenuForRegion(region);
     });
+    
+    // Add tab to container
+    menuTabsContainer.appendChild(tab);
+  });
+  
+  // Render first region by default
+  if (regions.length > 0) {
+    renderMenuForRegion(regions[0]);
+  }
+}
+
+// 6. RENDER MENU FOR A SPECIFIC REGION
+function renderMenuForRegion(region) {
+  // Clear menu container
+  menuItemsContainer.innerHTML = '';
+  
+  // Get beers for this region
+  const groupedMenu = groupMenuByRegion();
+  const beers = groupedMenu[region];
+  
+  // Set role and ID for accessibility
+  menuItemsContainer.setAttribute('role', 'tabpanel');
+  menuItemsContainer.setAttribute('id', `region-${region.toLowerCase()}`);
+  menuItemsContainer.setAttribute('aria-labelledby', `tab-${region.toLowerCase()}`);
+  
+  // Display region name
+  const regionHeader = document.createElement('h2');
+  regionHeader.className = 'region-header';
+  regionHeader.textContent = region;
+  menuItemsContainer.appendChild(regionHeader);
+  
+  // Render beers
+  beers.forEach(beer => {
+    // Check if this item is in the order
+    const inOrder = orderItems.find(orderItem => orderItem.id === beer.id);
+    const quantity = inOrder ? inOrder.quantity : 0;
+    
+    // Create the menu item element
+    const menuItemElement = document.createElement('div');
+    menuItemElement.className = `menu-item ${quantity > 0 ? 'in-order' : ''}`;
+    menuItemElement.dataset.id = beer.id;
+    
+    // Populate with HTML
+    menuItemElement.innerHTML = `
+      <div class="beer-info">
+        <h3>
+          ${beer.name}
+          <span class="price">$${beer.price.toFixed(2)}</span>
+        </h3>
+        <div class="beer-origin">${beer.country} • ${beer.abv} ABV</div>
+        <p class="description">${beer.description}</p>
+        <div class="tags">
+          ${beer.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+      </div>
+      <div class="beer-actions">
+        <button class="add-btn" aria-label="Add ${beer.name} to order">
+          <span>Add to Flight</span>
+        </button>
+      </div>
+      <div class="quantity-badge" aria-label="${quantity} in order">${quantity}</div>
+    `;
+    
+    // Add the element to the container
+    menuItemsContainer.appendChild(menuItemElement);
+    
+    // Add event listener to the add button
+    const addButton = menuItemElement.querySelector('.add-btn');
+    addButton.addEventListener('click', () => addToOrder(beer));
   });
 }
 
-// Render the order items
+// 7. RENDER ORDER ITEMS
 function renderOrder() {
   // Check if order is empty
   if (orderItems.length === 0) {
@@ -350,7 +414,7 @@ function renderOrder() {
   totalAmountElement.textContent = `$${total.toFixed(2)}`;
 }
 
-// 6. ORDER MANAGEMENT FUNCTIONS
+// 8. ORDER MANAGEMENT FUNCTIONS
 // Add an item to the order
 function addToOrder(item) {
   // Check if item already exists in order
@@ -372,7 +436,12 @@ function addToOrder(item) {
   
   // Update displays
   renderOrder();
-  renderMenu(); // Re-render menu to update the badges
+  
+  // Get current active region
+  const activeTab = document.querySelector('.menu-tab.active');
+  if (activeTab) {
+    renderMenuForRegion(activeTab.dataset.region);
+  }
 }
 
 // Decrease the quantity of an item
@@ -393,7 +462,12 @@ function decreaseQuantity(itemId) {
     
     // Update displays
     renderOrder();
-    renderMenu(); // Re-render menu to update the badges
+    
+    // Get current active region
+    const activeTab = document.querySelector('.menu-tab.active');
+    if (activeTab) {
+      renderMenuForRegion(activeTab.dataset.region);
+    }
   }
 }
 
@@ -410,11 +484,16 @@ function increaseQuantity(itemId) {
     
     // Update displays
     renderOrder();
-    renderMenu(); // Re-render menu to update the badges
+    
+    // Get current active region
+    const activeTab = document.querySelector('.menu-tab.active');
+    if (activeTab) {
+      renderMenuForRegion(activeTab.dataset.region);
+    }
   }
 }
 
-// 7. LOCAL STORAGE FUNCTIONS
+// 9. LOCAL STORAGE FUNCTIONS
 // Save order to localStorage
 function saveOrderToStorage() {
   localStorage.setItem('worldAlesOrder', JSON.stringify(orderItems));
@@ -428,7 +507,7 @@ function loadOrderFromStorage() {
   }
 }
 
-// 8. CHECKOUT FUNCTION
+// 10. CHECKOUT FUNCTION
 // Handle checkout process
 function handleCheckout() {
   // Show success message
@@ -443,12 +522,17 @@ function handleCheckout() {
     orderItems = [];
     localStorage.removeItem('worldAlesOrder');
     renderOrder();
-    renderMenu();
+    
+    // Refresh the menu display
+    const activeTab = document.querySelector('.menu-tab.active');
+    if (activeTab) {
+      renderMenuForRegion(activeTab.dataset.region);
+    }
   }, 3000);
   
   // In a real application, you would send the order to a server here
   console.log('Order submitted:', orderItems);
 }
 
-// 9. INITIALIZE THE APP WHEN DOM IS LOADED
+// 11. INITIALIZE THE APP WHEN DOM IS LOADED
 document.addEventListener('DOMContentLoaded', initializeApp);
